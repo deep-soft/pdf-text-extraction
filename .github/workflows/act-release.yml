@@ -82,7 +82,7 @@ jobs:
       - name: Set release directory to add to archive
         shell: bash
         run: |
-          if [[ "${{ matrix.job.os }}" ~= "windows" ]]; then
+          if [[ "${{ matrix.job.os }}" =~ "windows" ]]; then
             release_directory="build/${{ env.PROGRAM }}/release";
           else
             release_directory="build/${{ env.PROGRAM }}";
