@@ -80,6 +80,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Set release directory to add to archive
+        continue-on-error: true
         shell: bash
         run: |
           if [[ "${{ matrix.job.os }}" =~ "windows" ]]; then
@@ -90,13 +91,8 @@ jobs:
           echo "release_directory=$release_directory";
           echo "release_directory=$release_directory" >> $GITHUB_ENV;
           echo list $release_directory - begin
-          ls -lR $release_directory
+          ls -la $release_directory
           echo list $release_directory - end
-          echo list $release_directory / path: "${{ env.PROG_NAME }}*" - begin
-          pushd $release_directory
-          ls -la "${{ env.PROG_NAME }}*"
-          popd
-          echo list $release_directory / path: '${{ env.PROG_NAME }}*' - end
  
 # zip release begin
       - name: Create Zip Archive Release
@@ -108,7 +104,7 @@ jobs:
           directory: ${{ env.release_directory }}
           exclusions: ${{ env.ZIP_exclusions }}
           recursive_exclusions: ${{ env.ZIP_exclusions }}
-          path: '${{ env.PROG_NAME }}*'
+          path: "${{ env.PROG_NAME }}*"
           env_variable: 'ZIP_RELEASE_ARCHIVE'
         # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
