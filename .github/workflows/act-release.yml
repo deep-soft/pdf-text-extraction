@@ -60,7 +60,7 @@ jobs:
       - name: Setup ccache
         uses: deep-soft/cache@v3
         with:
-          path: ${{ github.workspace }}/.ccache
+          path: ${{ github.workspace }}
           key: ccache-${{ matrix.job.os }}
           restore-keys: |
             ccache-${{ matrix.job.os }}-
@@ -74,32 +74,28 @@ jobs:
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+      - name: Set release directory to add to archive
+        shell: bash
+        run: |
+          if: [[ ${{ matrix.job.os = "windows*" }} ]]; then
+            release_directory = "build/TextExtractionCLI/release";
+          else
+            release_directory = "build/TextExtractionCLI";
+          fi
+          echo "release_directory=$release_directory"
+          echo "release_directory=$release_directory" >> $GITHUB_ENV
+
 # zip release begin
       - name: Create Zip Archive Release
-        if: ${{ matrix.job.os != "windows*" }}
         continue-on-error: true
         uses: deep-soft/zip-release@v2
         with:
           type: 'zip'
           filename: '${{ env.PROGRAM }}-${{ env.VERSION }}-${{ matrix.job.os }}.zip'
-          directory: 'build/TextExtractionCLI'
+          directory: ${{ env.release_directory }}
           exclusions: '*.map *.pdb'
           recursive_exclusions: '*.map *.pdb'
-          path: '.'
-          env_variable: 'ZIP_RELEASE_ARCHIVE'
-        # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
-
-      - name: Create Zip Archive Release - windows
-        if: ${{ matrix.job.os == "windows*" }}
-        continue-on-error: true
-        uses: deep-soft/zip-release@v2
-        with:
-          type: 'zip'
-          filename: '${{ env.PROGRAM }}-${{ env.VERSION }}-${{ matrix.job.os }}.zip'
-          directory: 'build/TextExtractionCLI/Release'
-          exclusions: '*.map *.pdb'
-          recursive_exclusions: '*.map *.pdb'
-          path: '.'
+          path: 'TextExtraction*'
           env_variable: 'ZIP_RELEASE_ARCHIVE'
         # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
