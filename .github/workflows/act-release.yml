@@ -83,13 +83,21 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.job.os }}" =~ "windows" ]]; then
-            release_directory="build/${{ env.PROGRAM }}/release";
+            release_directory="build/${{ env.PROGRAM }}/Release";
           else
             release_directory="build/${{ env.PROGRAM }}";
           fi
           echo "release_directory=$release_directory";
           echo "release_directory=$release_directory" >> $GITHUB_ENV;
-
+          echo list $release_directory - begin
+          ls -lR $release_directory
+          echo list $release_directory - end
+          echo list $release_directory / path: "${{ env.PROGRAM }}*" - begin
+          pushd $release_directory
+          ls -la "${{ env.PROGRAM }}*"
+          popd
+          echo list $release_directory / path: '${{ env.PROGRAM }}*' - end
+ 
 # zip release begin
       - name: Create Zip Archive Release
         continue-on-error: true
@@ -100,7 +108,7 @@ jobs:
           directory: ${{ env.release_directory }}
           exclusions: ${{ env.ZIP_exclusions }}
           recursive_exclusions: ${{ env.ZIP_exclusions }}
-          path: '${{ env.PROGRAM }}*.*'
+          path: '${{ env.PROGRAM }}*'
           env_variable: 'ZIP_RELEASE_ARCHIVE'
         # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
