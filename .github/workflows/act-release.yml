@@ -92,11 +92,11 @@ jobs:
           echo list $release_directory - begin
           ls -lR $release_directory
           echo list $release_directory - end
-          echo list $release_directory / path: "${{ env.PROGRAM }}*" - begin
+          echo list $release_directory / path: "${{ env.PROG_NAME }}*" - begin
           pushd $release_directory
-          ls -la "${{ env.PROGRAM }}*"
+          ls -la "${{ env.PROG_NAME }}*"
           popd
-          echo list $release_directory / path: '${{ env.PROGRAM }}*' - end
+          echo list $release_directory / path: '${{ env.PROG_NAME }}*' - end
  
 # zip release begin
       - name: Create Zip Archive Release
@@ -108,7 +108,7 @@ jobs:
           directory: ${{ env.release_directory }}
           exclusions: ${{ env.ZIP_exclusions }}
           recursive_exclusions: ${{ env.ZIP_exclusions }}
-          path: '${{ env.PROGRAM }}*'
+          path: '${{ env.PROG_NAME }}*'
           env_variable: 'ZIP_RELEASE_ARCHIVE'
         # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
