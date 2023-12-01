@@ -100,7 +100,7 @@ jobs:
           directory: ${{ env.release_directory }}
           exclusions: ${{ env.ZIP_exclusions }}
           recursive_exclusions: ${{ env.ZIP_exclusions }}
-          path: '${{ env.PROGRAM }}*'
+          path: '${{ env.PROGRAM }}*.*'
           env_variable: 'ZIP_RELEASE_ARCHIVE'
         # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
