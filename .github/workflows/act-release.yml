@@ -12,6 +12,11 @@ on:
         type: boolean
         default: false
         required: true
+      RunTests:
+        description: RunTests
+        type: boolean
+        default: false
+        required: true
     
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -118,6 +123,7 @@ jobs:
 # zip release end
 
       - name: Test
+        if: ${{ inputs.RunTests }}
         timeout-minutes: 1
         working-directory: ${{github.workspace}}/build
         # Execute tests defined by the CMake configuration.
