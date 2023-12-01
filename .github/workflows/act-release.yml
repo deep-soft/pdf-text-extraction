@@ -48,8 +48,7 @@ jobs:
       - name: get program version
         shell: bash
         run: |
-          cat CMakeLists.txt;
-          VERSION=$(grep "project(" "CMakeLists.txt" | awk -F" " "{print $3}" | awk -F")" "{print $1}");
+          VERSION=$(grep "project(" "CMakeLists.txt" | awk -F' ' '{print $3}' | awk -F')' '{print $1}');
           echo "VERSION=v$VERSION";
           echo "VERSION=v$VERSION" >> $GITHUB_ENV;
 
