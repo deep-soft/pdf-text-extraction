@@ -16,7 +16,8 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  TAG_NAME: 'pdf-text-extract'
+  TAG_NAME: 'TextExtractionCLI'
+  PROGRAM: 'TextExtractionCLI'
   VERSION: 'v1.0.0'
 
 jobs:
@@ -41,7 +42,22 @@ jobs:
           - { os: windows-latest }
 
     steps:
-      - uses: deep-soft/checkout@v3
+      - name: Checkout
+        uses: deep-soft/checkout@v3
+
+      - name: get program version
+        shell: bash
+        run: |
+          VERSION=$(grep "project(TextExtraction" CMakeLists.txt  | awk "{print $3}" | awk -F")" "{print $1}")
+          echo "VERSION=v$VERSION" >> $GITHUB_ENV
+
+      - name: Setup ccache
+        uses: deep-soft/cache@v3
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ccache-${{ matrix.job.os }}
+          restore-keys: |
+            ccache-${{ matrix.job.os }}-
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -58,7 +74,7 @@ jobs:
         uses: deep-soft/zip-release@v2
         with:
           type: 'zip'
-          filename: '${{ env.TAG_NAME }}-${{ env.VERSION }}-${{ matrix.job.os }}.zip'
+          filename: '${{ env.PROGRAM }}-${{ env.VERSION }}-${{ matrix.job.os }}.zip'
           directory: 'build/TextExtractionCLI/Release'
           exclusions: '*.map *.pdb'
           recursive_exclusions: '*.map *.pdb'
@@ -82,7 +98,7 @@ jobs:
         uses: deep-soft/zip-release@v2
         with:
           type: 'zip'
-          filename: '${{ env.TAG_NAME }}-${{ env.VERSION }}-${{ matrix.job.os }}-ALL.zip'
+          filename: '${{ env.PROGRAM }}-${{ env.VERSION }}-${{ matrix.job.os }}-ALL.zip'
           directory: '.'
           exclusions: ''
           recursive_exclusions: ''
