@@ -17,12 +17,17 @@ on:
         type: boolean
         default: false
         required: true
-    
+      ZIP_exclusions:
+        description: ZIP_exclusions
+        default: '*.map *.pdb'
+        required: true
+
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   TAG_NAME: 'TextExtractionCLI'
   PROGRAM: 'TextExtractionCLI'
+  PROG_NAME: 'TextExtraction'
   VERSION: 'v1.0.0'
 
 jobs:
@@ -78,9 +83,9 @@ jobs:
         shell: bash
         run: |
           if [[ "${{ matrix.job.os }}" ~= "windows" ]]; then
-            release_directory="build/TextExtractionCLI/release";
+            release_directory="build/${{ env.PROGRAM }}/release";
           else
-            release_directory="build/TextExtractionCLI";
+            release_directory="build/${{ env.PROGRAM }}";
           fi
           echo "release_directory=$release_directory";
           echo "release_directory=$release_directory" >> $GITHUB_ENV;
@@ -93,9 +98,9 @@ jobs:
           type: 'zip'
           filename: '${{ env.PROGRAM }}-${{ env.VERSION }}-${{ matrix.job.os }}.zip'
           directory: ${{ env.release_directory }}
-          exclusions: '*.map *.pdb'
-          recursive_exclusions: '*.map *.pdb'
-          path: 'TextExtraction*'
+          exclusions: ${{ env.ZIP_exclusions }}
+          recursive_exclusions: ${{ env.ZIP_exclusions }}
+          path: '${{ env.PROGRAM }}*'
           env_variable: 'ZIP_RELEASE_ARCHIVE'
         # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
 
