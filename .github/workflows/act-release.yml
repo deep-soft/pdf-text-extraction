@@ -76,6 +76,21 @@ jobs:
 
 # zip release begin
       - name: Create Zip Archive Release
+        if: ${{ matrix.job.os !~= "windows*" }}
+        continue-on-error: true
+        uses: deep-soft/zip-release@v2
+        with:
+          type: 'zip'
+          filename: '${{ env.PROGRAM }}-${{ env.VERSION }}-${{ matrix.job.os }}.zip'
+          directory: 'build/TextExtractionCLI'
+          exclusions: '*.map *.pdb'
+          recursive_exclusions: '*.map *.pdb'
+          path: '.'
+          env_variable: 'ZIP_RELEASE_ARCHIVE'
+        # archive name is ${{ env.ZIP_RELEASE_ARCHIVE }}
+
+      - name: Create Zip Archive Release - windows
+        if: ${{ matrix.job.os ~= "windows*" }}
         continue-on-error: true
         uses: deep-soft/zip-release@v2
         with:
