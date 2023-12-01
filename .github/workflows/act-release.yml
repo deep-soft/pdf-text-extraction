@@ -48,6 +48,7 @@ jobs:
 
 # zip release begin
       - name: Create Zip Archive Release
+        continue-on-error: true
         uses: deep-soft/zip-release@v2
         with:
           type: 'zip'
@@ -70,6 +71,7 @@ jobs:
 
 # zip release begin
       - name: Create Zip Archive Release - ALL
+        continue-on-error: true
         uses: deep-soft/zip-release@v2
         with:
           type: 'zip'
