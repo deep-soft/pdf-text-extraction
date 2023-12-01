@@ -77,13 +77,13 @@ jobs:
       - name: Set release directory to add to archive
         shell: bash
         run: |
-          if: [[ ${{ matrix.job.os = "windows*" }} ]]; then
-            release_directory = "build/TextExtractionCLI/release";
+          if [[ ${{ matrix.job.os = "windows*" }} ]]; then
+            release_directory="build/TextExtractionCLI/release";
           else
-            release_directory = "build/TextExtractionCLI";
+            release_directory="build/TextExtractionCLI";
           fi
-          echo "release_directory=$release_directory"
-          echo "release_directory=$release_directory" >> $GITHUB_ENV
+          echo "release_directory=$release_directory";
+          echo "release_directory=$release_directory" >> $GITHUB_ENV;
 
 # zip release begin
       - name: Create Zip Archive Release
