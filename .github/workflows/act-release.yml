@@ -80,8 +80,8 @@ jobs:
       - name: change PDF-Writer repository
         shell: bash
         run: |
-          if [[ "$SED_EXE" != "" ]]; then
-            export sed=$SED_EXE;
+          if [[ "${{ env.SED_EXE }}" != "" ]]; then
+            export sed=${{ env.SED_EXE }};
           fi
           #GIT_REPOSITORY https://github.com/galkahana/PDF-Writer.git
           #GIT_REPOSITORY https://github.com/deep-soft/PDF-Writer.git
