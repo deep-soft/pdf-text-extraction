@@ -62,6 +62,17 @@ jobs:
           echo "VERSION=v$VERSION";
           echo "VERSION=v$VERSION" >> $GITHUB_ENV;
 
+      - name: change PDF-Writer repository
+        shell: bash
+        run: |
+          #GIT_REPOSITORY https://github.com/galkahana/PDF-Writer.git
+          #GIT_REPOSITORY https://github.com/deep-soft/PDF-Writer.git
+          OLD_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}');
+          sed -i "s!github.com/galkahana/PDF-Writer!github.com/deep-soft/PDF-Writer!" "CMakeLists.txt"
+          NEW_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}');
+          echo "OLD_REP=$OLD_REP";
+          echo "NEW_REP=$NEW_REP";
+
       - name: Setup cache
         uses: deep-soft/cache@v3
         with:
