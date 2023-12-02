@@ -62,15 +62,17 @@ jobs:
           echo "VERSION=v$VERSION";
           echo "VERSION=v$VERSION" >> $GITHUB_ENV;
 
-      - name: macOS install gnu-sed
-        if: ${{ startsWith(matrix.job.os, 'macos') }}
+      - name: set env.SED_EXE and macOS install gnu-sed
+        #if: ${{ startsWith(matrix.job.os, 'macos') }}
         shell: bash
         run: |
           SED_EXE=$(which sed);
           echo "SED_EXE=$SED_EXE";
-          brew install gnu-sed;
-          export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH";
-          SED_EXE=$(which sed);
+          if [[ ${{ matrix.job.os }} =~ "macos" ]]; then
+            brew install gnu-sed;
+            export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH";
+            SED_EXE=$(which sed);
+          fi
           echo "SED_EXE=$SED_EXE";
           echo "SED_EXE=$SED_EXE" >> $GITHUB_ENV;
           #ls -la $SED_EXE;
@@ -80,13 +82,10 @@ jobs:
       - name: change PDF-Writer repository
         shell: bash
         run: |
-          if [[ "${{ env.SED_EXE }}" != "" ]]; then
-            export sed=${{ env.SED_EXE }};
-          fi
           #GIT_REPOSITORY https://github.com/galkahana/PDF-Writer.git
           #GIT_REPOSITORY https://github.com/deep-soft/PDF-Writer.git
           OLD_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}');
-          sed -i "s!github.com/galkahana/PDF-Writer!github.com/deep-soft/PDF-Writer!" "CMakeLists.txt"
+          ${{ env.SED_EXE }} -i "s!github.com/galkahana/PDF-Writer!github.com/deep-soft/PDF-Writer!" "CMakeLists.txt"
           NEW_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}');
           echo "OLD_REP=$OLD_REP";
           echo "NEW_REP=$NEW_REP";
