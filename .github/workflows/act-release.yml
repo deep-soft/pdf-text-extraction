@@ -63,7 +63,7 @@ jobs:
           echo "VERSION=v$VERSION" >> $GITHUB_ENV;
 
       - name: macOS install gnu-sed
-        if: ${{ "matrix.job.os" }}  =~ "macos"
+        if: ${{ matrix.job.os }}  =~ 'macos'
         shell: bash
         run: |
           brew install gnu-sed
