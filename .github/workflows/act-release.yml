@@ -62,6 +62,15 @@ jobs:
           echo "VERSION=v$VERSION";
           echo "VERSION=v$VERSION" >> $GITHUB_ENV;
 
+      - name: macOS install gnu-sed
+        if: ${{ "matrix.job.os" }}  =~ "macos"
+        shell: bash
+        run: |
+          brew install gnu-sed
+          export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+          echo "SED_EXE=$(which sed)" >> $GITHUB_ENV
+          ls -la $SED_EXE
+
       - name: change PDF-Writer repository
         shell: bash
         run: |
