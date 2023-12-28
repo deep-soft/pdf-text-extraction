@@ -82,13 +82,23 @@ jobs:
       - name: change PDF-Writer repository
         shell: bash
         run: |
-          #GIT_REPOSITORY https://github.com/galkahana/PDF-Writer.git
-          #GIT_REPOSITORY https://github.com/deep-soft/PDF-Writer.git
-          OLD_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}');
-          ${{ env.SED_EXE }} -i "s!github.com/galkahana/PDF-Writer!github.com/deep-soft/PDF-Writer!" "CMakeLists.txt"
-          NEW_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}');
-          echo "OLD_REP=$OLD_REP";
-          echo "NEW_REP=$NEW_REP";
+          OLD_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}') || true;
+          if [[ "$OLD_REP" != "" ]]; then
+            #GIT_REPOSITORY https://github.com/galkahana/PDF-Writer.git
+            #GIT_REPOSITORY https://github.com/deep-soft/PDF-Writer.git
+            ${{ env.SED_EXE }} -i "s!github.com/galkahana/PDF-Writer!github.com/deep-soft/PDF-Writer!" "CMakeLists.txt"
+            NEW_REP=$(grep "GIT_REPOSITORY" "CMakeLists.txt" | awk -F' ' '{print $2}') || true;
+            echo "OLD_REP=$OLD_REP";
+            echo "NEW_REP=$NEW_REP";
+          else
+            #URL https://github.com/galkahana/PDF-Writer.git
+            #URL https://github.com/deep-soft/PDF-Writer.git
+            OLD_REP=$(grep "URL https" "CMakeLists.txt" | awk -F' ' '{print $2}') || true;
+            ${{ env.SED_EXE }} -i "s!github.com/galkahana/PDF-Writer!github.com/deep-soft/PDF-Writer!" "CMakeLists.txt"
+            NEW_REP=$(grep "URL https" "CMakeLists.txt" | awk -F' ' '{print $2}') || true;
+            echo "OLD_REP=$OLD_REP";
+            echo "NEW_REP=$NEW_REP";
+          fi
 
       - name: Setup cache
         uses: deep-soft/cache@v3
